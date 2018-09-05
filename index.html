@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>ArcGIS API for JavaScript: Map/MapAlm</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.25/esri/css/esri.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://js.arcgis.com/3.25/"></script>
+    <script type="text/javascript">
+        var map;
+        var timer;
+        require([
+            "dojo/dom",
+            "dojo/dom-construct",
+            "esri/dijit/Search",
+            "esri/layers/ArcGISDynamicMapServiceLayer",
+            "esri/layers/ArcGISTiledMapServiceLayer",
+            "esri/layers/FeatureLayer",
+            "esri/InfoTemplate",
+            "esri/map",
+            "dojo/parser",
+            "dojo/string",
+            "esri/symbols/SimpleFillSymbol",
+            "esri/symbols/SimpleLineSymbol",
+            "esri/tasks/IdentifyTask",
+            "esri/tasks/IdentifyParameters",
+            "esri/dijit/Popup",
+            "dojo/_base/array",
+            "esri/Color",
+            "dojo/domReady!"
+        ], function(dom, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, Map, parser, string,
+        SimpleFillSymbol, SimpleLineSymbol, IdentifyTask, IdentifyParameters, Popup, arrayUtils, Color) {
+            parser.parse();
+
+            var identifyTask, identifyParams;
+
+            var popup = new Popup({
+              fillSymbol: new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+                new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                  new Color([255, 0, 0]), 2), new Color([255, 255, 0, 0.25]))
+            }, domConstruct.create("div"));
+
+            var map = new Map("map",{
+              scale: 250000,
+              infoWindow: popup,
+              maxScale: 100,
+              minScale: 250000
+            });
+
+            var search = new Search({
+              enableButtonMode: true, //this enables the search widget to display as a single button
+              enableLabel: false,
+              enableInfoWindow: true,
+              showInfoWindowOnSelect: false,
+              map: map,
+              useMapExtent:true,
+              zoomScale:7000
+            }, "search");
+
+            var sources = search.get("sources");
+            sources.push({
+              featureLayer: new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/2"),
+              searchFields: ["address"],
+              displayField: "address",
+              exactMatch: false,
+              outFields: ["*"],
+              name: "Здания и сооружения",
+              placeholder: "пример: Ауэзова",
+              maxResults: 6,
+              maxSuggestions: 6,
+              infoTemplate: new InfoTemplate("Здания и сооружения", `<table>
+                <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${address}"+`</td></tr>
+                <tr><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${FLOOR}"+`</td></tr>
+                <tr><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${YEAR_OF_FO}"+`</td></tr>
+                <tr><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${NAME}"+`</td></tr>
+                <tr><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${ZASTR_AREA}"+`</td></tr>
+                <tr><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${OBSCH_AREA}"+`</td></tr>
+                <tr><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${MATERIAL}"+`</td></tr>
+                <tr><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${NOTE}"+`</td></tr>
+                <tr><td class="attrName">Ссылка:</td>  <td class="attrValue">`+"<a target='_blank' href='${links}'>Подробнее</a>"+`</td></tr>
+              </table>`),
+              enableSuggestions: true,
+              minCharacters: 0,
+              useMapExtent:true,
+              zoomScale:7000
+            });
+            search.set("sources", sources);
+            search.startup();
+
+            map.on("load", mapReady);
+
+            var layer;
+            layer = new ArcGISDynamicMapServiceLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer");
+            map.addLayer(layer);
+
+            function mapReady () {
+              map.on("zoom-end", function(){
+                console.log(map.getZoom());
+                console.log(map.getScale());
+              });
+              map.on("click", executeIdentifyTask);
+              //create identify tasks and setup parameters
+              identifyTask = new IdentifyTask('https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer');
+
+              identifyParams = new IdentifyParameters();
+              identifyParams.tolerance = 3;
+              identifyParams.returnGeometry = true;
+              identifyParams.layerIds = [2];
+              identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
+              identifyParams.width = map.width;
+              identifyParams.height = map.height;
+            }
+
+            function executeIdentifyTask (event) {
+              clearTimeout(timer);
+              identifyParams.geometry = event.mapPoint;
+              identifyParams.mapExtent = map.extent;
+
+              var deferred = identifyTask
+                .execute(identifyParams)
+                .addCallback(function (response) {
+                  // response is an array of identify result objects
+                  // Let's return an array of features.
+                  if(response.length == 0){
+                    timer = setTimeout(function(){map.infoWindow.hide(); }, 1000);
+                  }
+                  return arrayUtils.map(response, function (result) {
+                    //console.log(result.feature);
+                    var feature = result.feature;
+                    console.log(result.extent);
+                    var layerName = result.layerName;
+
+                    feature.attributes.layerName = layerName;
+                    if (layerName === 'Здания и сооружения') {
+                      var my_link = "";
+                      if(result.feature.attributes.ссылка != ""){
+                          my_link = "<a target='_blank' href='${ссылка}'>Подробнее</a>";
+                      }
+                      var taxParcelTemplate = new InfoTemplate("${layerName}", `<table>
+                        <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Адрес}"+`</td></tr>
+                        <tr><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${Этажность}"+`</td></tr>
+                        <tr><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${Год постройки}"+`</td></tr>
+                        <tr><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${Функциональное назначение}"+`</td></tr>
+                        <tr><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${Площадь постройки}"+`</td></tr>
+                        <tr><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${Общая площадь}"+`</td></tr>
+                        <tr><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${Материал строения}"+`</td></tr>
+                        <tr><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${Комментарий}"+`</td></tr>
+                        <tr><td class="attrName">Ссылка:</td>  <td class="attrValue">`+my_link+`</td></tr>
+                      </table>`);
+                      feature.setInfoTemplate(taxParcelTemplate);
+                    }
+                    return feature;
+                  });
+                });
+
+              map.infoWindow.setFeatures([deferred]);
+              map.infoWindow.show(event.mapPoint);
+            }
+
+        });
+    </script>
+</head>
+
+<body class="tundra">
+    <div data-dojo-type="dijit/layout/BorderContainer" design="headline" gutters="true" style="width: 100%; height: 100%; margin: 0;">
+        <div data-dojo-type="dijit/layout/ContentPane" region="top" id="navtable">
+          <div id="search"></div>
+        </div>
+        <div id="map" data-dojo-type="dijit/layout/ContentPane" region="center"></div>
+    </div>
+</body>
+
+</html>

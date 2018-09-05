@@ -1,0 +1,20 @@
+html, body, #map {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+#search {
+  display: block;
+  position: absolute;
+  top: 20px;
+  left: 74px;
+  z-index: 98;
+}
+.attrName{
+  color: #888888;
+  vertical-align: top;
+}
+.esriPopup{
+  z-index: 99;
+}
