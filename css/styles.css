@@ -15,6 +15,9 @@ html, body, #map {
   color: #888888;
   vertical-align: top;
 }
+.attrValue{
+  vertical-align: top;
+}
 .esriPopup{
   z-index: 99;
 }

@@ -54,10 +54,10 @@
               enableButtonMode: true, //this enables the search widget to display as a single button
               enableLabel: false,
               enableInfoWindow: true,
-              showInfoWindowOnSelect: false,
+              showInfoWindowOnSelect: true,
               map: map,
-              useMapExtent:true,
-              zoomScale:7000
+              sources: [],
+              zoomScale: 7000
             }, "search");
 
             var sources = search.get("sources");
@@ -83,9 +83,28 @@
                 <tr><td class="attrName">Ссылка:</td>  <td class="attrValue">`+"<a target='_blank' href='${links}'>Подробнее</a>"+`</td></tr>
               </table>`),
               enableSuggestions: true,
-              minCharacters: 0,
-              useMapExtent:true,
-              zoomScale:7000
+              minCharacters: 0
+            });
+            sources.push({
+              featureLayer: new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/69"),
+              searchFields: ["KAD_N"],
+              displayField: "KAD_N",
+              exactMatch: false,
+              outFields: ["*"],
+              name: "Кадастровый номер",
+              placeholder: "введите кадастровый номер",
+              maxResults: 6,
+              maxSuggestions: 6,
+              infoTemplate: new InfoTemplate("Кадастровый номер", `<table>
+                <tr><td class="attrName">Кадастровый номер:</td>  <td class="attrValue">`+"${KAD_N}"+`</td></tr>
+                <tr><td class="attrName">Код района:</td>  <td class="attrValue">`+"${CodeR}"+`</td></tr>
+                <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Adress}"+`</td></tr>
+                <tr><td class="attrName">Целевое назначение</td>  <td class="attrValue">`+"${Funk}"+`</td></tr>
+                <tr><td class="attrName">Площадь зу:</td>  <td class="attrValue">`+"${S}"+`</td></tr>
+                <tr><td class="attrName">Право:</td>  <td class="attrValue">`+"${right}"+`</td></tr>
+              </table>`),
+              enableSuggestions: true,
+              minCharacters: 0
             });
             search.set("sources", sources);
             search.startup();
@@ -97,10 +116,10 @@
             map.addLayer(layer);
 
             function mapReady () {
-              map.on("zoom-end", function(){
+              /*map.on("zoom-end", function(){
                 console.log(map.getZoom());
                 console.log(map.getScale());
-              });
+              });*/
               map.on("click", executeIdentifyTask);
               //create identify tasks and setup parameters
               identifyTask = new IdentifyTask('https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer');
@@ -130,7 +149,6 @@
                   return arrayUtils.map(response, function (result) {
                     //console.log(result.feature);
                     var feature = result.feature;
-                    console.log(result.extent);
                     var layerName = result.layerName;
 
                     feature.attributes.layerName = layerName;
