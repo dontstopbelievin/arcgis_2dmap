@@ -1,8 +1,10 @@
 html, body, #map {
+  left:0px!important;
+  top:0px!important;
   padding: 0;
   margin: 0;
-  height: 100%;
-  width: 100%;
+  height: 100%!important;
+  width: 100%!important;
 }
 #search {
   display: block;
@@ -66,7 +68,7 @@ html, body, #map {
 #fullscreen_button:hover{
   background-color: rgba(102,102,102,0.90);
 }
-#layers{
+#layers_button{
   visibility: hidden;
   height: 30px;
   width: 30px;
@@ -81,11 +83,8 @@ html, body, #map {
   left: 20px;
   z-index: 50;
 }
-#layers:hover{
+#layers_button:hover{
   background-color: rgba(102,102,102,0.90);
-}
-.my_fulls{
-  margin-top: 8px;
 }
 #layerListPane{
     width:25%;
@@ -102,4 +101,27 @@ html, body, #map {
 }
 .esriLayerList .esriList ul{
   background-color: #fff;
+}
+#my_layers_panel{
+  position:absolute;
+  right:10px;
+  top:10px;
+  z-Index:50;
+  width:380px;
+  height:280px;
+  max-height: 95%;
+  resize: vertical;
+  overflow:hidden;
+  visibility: hidden;
+}
+#my_layers_panel{
+  cursor: move;
+}
+#my_layers_body{
+  cursor: default;
+  z-index: 51;
+  margin-bottom: 15px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: white;
 }
