@@ -12,8 +12,11 @@
     <script type="text/javascript">
         var map;
         var timer;
+        /* Get the documentElement (<html>) to display the page in fullscreen */
+        var elem = document.documentElement;
         require([
             "dojo/dom",
+            "dojo/on",
             "dojo/dom-construct",
             "esri/dijit/Search",
             "esri/layers/ArcGISDynamicMapServiceLayer",
@@ -30,9 +33,15 @@
             "esri/dijit/Popup",
             "dojo/_base/array",
             "esri/Color",
+            "esri/geometry/webMercatorUtils",
+            "esri/dijit/Scalebar",
+            "esri/dijit/HomeButton",
+            "esri/dijit/LocateButton",
+            "esri/dijit/LayerList",
             "dojo/domReady!"
-        ], function(dom, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, Map, parser, string,
-        SimpleFillSymbol, SimpleLineSymbol, IdentifyTask, IdentifyParameters, Popup, arrayUtils, Color) {
+        ], function(dom, on, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, Map, parser, string,
+        SimpleFillSymbol, SimpleLineSymbol, IdentifyTask, IdentifyParameters, Popup, arrayUtils, Color, webMercatorUtils, Scalebar, HomeButton, LocateButton,
+        LayerList) {
             parser.parse();
 
             var identifyTask, identifyParams;
@@ -56,8 +65,7 @@
               enableInfoWindow: true,
               showInfoWindowOnSelect: true,
               map: map,
-              sources: [],
-              zoomScale: 7000
+              sources: []
             }, "search");
 
             var sources = search.get("sources");
@@ -83,7 +91,8 @@
                 <tr><td class="attrName">Ссылка:</td>  <td class="attrValue">`+"<a target='_blank' href='${links}'>Подробнее</a>"+`</td></tr>
               </table>`),
               enableSuggestions: true,
-              minCharacters: 0
+              minCharacters: 0,
+              autoNavigate:false
             });
             sources.push({
               featureLayer: new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/69"),
@@ -115,11 +124,49 @@
             layer = new ArcGISDynamicMapServiceLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer");
             map.addLayer(layer);
 
+            var myWidget = new LayerList({
+               map: map,
+               layers: []
+            },"layerList");
+            myWidget.startup();
+
+            var scalebar = new Scalebar({
+              map: map,
+              // "dual" displays both miles and kilometers
+              // "english" is the default, which displays miles
+              // use "metric" for kilometers
+              scalebarUnit: "metric"
+            });
+
+            var home = new HomeButton({
+              map: map
+            }, "HomeButton");
+            home.startup();
+
+            geoLocate = new LocateButton({
+              map: map
+            }, "LocateButton");
+            geoLocate.startup();
+
+            var fulls = document.getElementById("fullscreen_button");
+            var layers_button = document.getElementById("layers");
             function mapReady () {
-              /*map.on("zoom-end", function(){
-                console.log(map.getZoom());
-                console.log(map.getScale());
-              });*/
+
+              map.on("mouse-move", showCoordinates);
+              map.on("mouse-drag", showCoordinates);
+
+              fulls.style.visibility = "visible";
+              fulls.addEventListener("click", openFullscreen);
+              layers_button.style.visibility = "visible";
+
+              on(search,'select-result', function(e) {
+                console.log ('selected result', e);
+                var pt = e.result.feature.geometry.getCentroid();
+                this.map.centerAt(pt);
+                console.log(pt);
+                this.map.setScale(1000);
+              });
+
               map.on("click", executeIdentifyTask);
               //create identify tasks and setup parameters
               identifyTask = new IdentifyTask('https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer');
@@ -131,6 +178,26 @@
               identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
               identifyParams.width = map.width;
               identifyParams.height = map.height;
+            }
+
+            /* View in fullscreen */
+            function openFullscreen() {
+              if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+              } else if (elem.mozRequestFullScreen) { /* Firefox */
+                elem.mozRequestFullScreen();
+              } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                elem.webkitRequestFullscreen();
+              } else if (elem.msRequestFullscreen) { /* IE/Edge */
+                elem.msRequestFullscreen();
+              }
+            }
+
+            function showCoordinates(evt) {
+              //the map is in web mercator but display coordinates in geographic (lat, long)
+              var mp = webMercatorUtils.webMercatorToGeographic(evt.mapPoint);
+              //display mouse coordinates
+              dom.byId("info").innerHTML = mp.x.toFixed(3) + " " + mp.y.toFixed(3) + " Градусы";
             }
 
             function executeIdentifyTask (event) {
@@ -185,10 +252,22 @@
 <body class="tundra">
     <div data-dojo-type="dijit/layout/BorderContainer" design="headline" gutters="true" style="width: 100%; height: 100%; margin: 0;">
         <div data-dojo-type="dijit/layout/ContentPane" region="top" id="navtable">
-          <div id="search"></div>
         </div>
-        <div id="map" data-dojo-type="dijit/layout/ContentPane" region="center"></div>
+        <div id="layerListPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">
+            <div id="layerList"></div>
+        </div>
+        <div id="map" data-dojo-type="dijit/layout/ContentPane" region="center">
+          <div id="search"></div>
+          <span id="info"></span>
+          <div id="HomeButton"></div>
+          <div id="LocateButton"></div>
+          <div id="fullscreen_button">
+            <img src="/images/fulls.png" class="my_fulls">
+          </div>
+          <div id="layers">
+            <img src="/images/layers.png" class="my_fulls">
+          </div>
+      </div>
     </div>
 </body>
-
 </html>
