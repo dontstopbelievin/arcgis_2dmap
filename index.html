@@ -26,7 +26,6 @@
             "esri/layers/ArcGISTiledMapServiceLayer",
             "esri/layers/FeatureLayer",
             "esri/InfoTemplate",
-            "esri/config",
             "esri/sniff",
             "esri/map",
             "dojo/parser",
@@ -45,14 +44,14 @@
             "esri/dijit/LayerList",
             "dijit/Dialog", "dijit/DialogUnderlay",
             "dojo/keys",
-            "esri/SnappingManager","esri/tasks/GeometryService",
-            "esri/dijit/Measurement","esri/renderers/SimpleRenderer",
+            "esri/SnappingManager",
+            "esri/dijit/Measurement",
 
             "dijit/form/CheckBox","dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/TitlePane",
             "dojo/domReady!"
-        ], function(dom, on, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, esriConfig, has, Map, parser, string,
+        ], function(dom, on, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, has, Map, parser, string,
         SimpleFillSymbol, SimpleLineSymbol, IdentifyTask, IdentifyParameters, Popup, arrayUtils, Color, webMercatorUtils, Scalebar, HomeButton, LocateButton,
-        LayerList, Dialog, DialogUnderlay, keys, SnappingManager, GeometryService, Measurement, SimpleRenderer) {
+        LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
             parser.parse();
 
             var identifyTask, identifyParams;
@@ -62,8 +61,6 @@
                 new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
                   new Color([255, 0, 0]), 2), new Color([255, 255, 0, 0.25]))
             }, domConstruct.create("div"));
-
-            esriConfig.defaults.geometryService = new GeometryService("https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 
             var map = new Map("map",{
               scale: 250000,
@@ -136,24 +133,12 @@
             layer = new ArcGISDynamicMapServiceLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer");
             map.addLayer(layer);
 
-            var parseLayer = new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/2", {
-              mode: ArcGISDynamicMapServiceLayer.MODE_ONDEMAND,
-              outFields: ["*"]
-            });
-            var sfs = new SimpleFillSymbol(
-              "solid",
-              new SimpleLineSymbol("solid", new Color([195, 176, 23]), 2),
-              null
-            );
-            parseLayer.setRenderer(new SimpleRenderer(sfs));
-
-
             //dojo.keys.copyKey maps to CTRL on windows and Cmd on Mac., but has wrong code for Chrome on Mac
             var snapManager = map.enableSnapping({
               snapKey: has("mac") ? keys.META : keys.CTRL
             });
             var layerInfos = [{
-              layer: parseLayer
+              layer: layer
             }];
             snapManager.setLayerInfos(layerInfos);
 
@@ -162,7 +147,7 @@
             }, dom.byId("measurementDiv"));
             measurement.startup();
 
-            var myWidget = new LayerList({
+            var layers_widget = new LayerList({
                map: map,
                showLegend: true,
                showOpacitySlider: true,
@@ -172,7 +157,7 @@
                   id: "Все слои"
                }]
             },"layerList");
-            myWidget.startup();
+            layers_widget.startup();
 
             var scalebar = new Scalebar({
               map: map,
