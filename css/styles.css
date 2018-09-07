@@ -11,7 +11,7 @@ html, body, #map {
   position: absolute;
   top: 20px;
   left: 74px;
-  z-index: 98;
+  z-index: 50;
 }
 .attrName{
   color: #888888;
@@ -21,7 +21,7 @@ html, body, #map {
   vertical-align: top;
 }
 .esriPopup{
-  z-index: 99;
+  z-index: 50;
 }
 #info{
   height: 17px;
@@ -40,13 +40,13 @@ html, body, #map {
 }
 #HomeButton{
   position: absolute;
-  top: 175px;
+  top: 215px;
   left: 20px;
   z-index: 50;
 }
 #LocateButton{
   position: absolute;
-  top: 215px;
+  top: 255px;
   left: 20px;
   z-index: 50;
 }
@@ -103,6 +103,7 @@ html, body, #map {
   background-color: #fff;
 }
 #my_layers_panel{
+  font-size: 14px!important;
   position:absolute;
   right:10px;
   top:10px;
@@ -113,15 +114,80 @@ html, body, #map {
   resize: vertical;
   overflow:hidden;
   visibility: hidden;
+  min-height: 150px;
 }
-#my_layers_panel{
+#my_layers_panelheader{
   cursor: move;
 }
 #my_layers_body{
-  cursor: default;
-  z-index: 51;
   margin-bottom: 15px;
+  z-index: 51;
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: white;
+}
+#measurement_button{
+  visibility: hidden;
+  height: 30px;
+  width: 30px;
+  background-color: rgba(102,102,102,0.80);
+  text-align: center;
+  padding: 2px;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 5px;
+  position: absolute;
+  top: 175px;
+  left: 20px;
+  z-index: 50;
+}
+#measurement_button:hover{
+  background-color: rgba(102,102,102,0.90);
+}
+#my_measurement_panel{
+  font-size: 14px!important;
+  position:absolute;
+  right:10px;
+  top:10px;
+  z-Index:50;
+  width:280px;
+  height:250px;
+  max-height: 95%;
+  resize: vertical;
+  overflow:hidden;
+  visibility: hidden;
+  min-height: 150px;
+}
+#my_measurement_panelheader{
+  cursor: move;
+}
+#my_measurement_body{
+  margin-bottom: 15px;
+  cursor: default;
+  z-index: 51;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: white;
+}
+.dijitMenuTable{
+  border: 1px solid black;
+}
+.dijitMenuTable td{
+  padding: 2px;
+}
+.dijitMenuTable tr:hover{
+  background-color: #ededed;
+}
+.dijitButtonText{
+  padding-left: 5px;
+}
+.dijitArrowButtonChar{
+  padding-right: 5px;
+  display: inline-block!important;
+}
+.dijitArrowButtonInner{
+  width: 0px!important;
+}
+.dijitDownArrowButton:hover .dijitButtonText, .dijitDownArrowButton:hover .dijitArrowButtonChar{
+  background-color: #ededed
 }

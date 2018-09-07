@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
     <title>ArcGIS API for JavaScript: Map/MapAlm</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.25/esri/themes/calcite/dijit/calcite.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.25/esri/themes/calcite/esri/esri.css">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://js.arcgis.com/3.25/esri/css/esri.css">
     <script src="https://js.arcgis.com/3.25/"></script>
@@ -24,6 +26,8 @@
             "esri/layers/ArcGISTiledMapServiceLayer",
             "esri/layers/FeatureLayer",
             "esri/InfoTemplate",
+            "esri/config",
+            "esri/sniff",
             "esri/map",
             "dojo/parser",
             "dojo/string",
@@ -40,10 +44,15 @@
             "esri/dijit/LocateButton",
             "esri/dijit/LayerList",
             "dijit/Dialog", "dijit/DialogUnderlay",
+            "dojo/keys",
+            "esri/SnappingManager","esri/tasks/GeometryService",
+            "esri/dijit/Measurement","esri/renderers/SimpleRenderer",
+
+            "dijit/form/CheckBox","dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/TitlePane",
             "dojo/domReady!"
-        ], function(dom, on, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, Map, parser, string,
+        ], function(dom, on, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, esriConfig, has, Map, parser, string,
         SimpleFillSymbol, SimpleLineSymbol, IdentifyTask, IdentifyParameters, Popup, arrayUtils, Color, webMercatorUtils, Scalebar, HomeButton, LocateButton,
-        LayerList, Dialog, DialogUnderlay) {
+        LayerList, Dialog, DialogUnderlay, keys, SnappingManager, GeometryService, Measurement, SimpleRenderer) {
             parser.parse();
 
             var identifyTask, identifyParams;
@@ -53,6 +62,8 @@
                 new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
                   new Color([255, 0, 0]), 2), new Color([255, 255, 0, 0.25]))
             }, domConstruct.create("div"));
+
+            esriConfig.defaults.geometryService = new GeometryService("https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 
             var map = new Map("map",{
               scale: 250000,
@@ -125,6 +136,32 @@
             layer = new ArcGISDynamicMapServiceLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer");
             map.addLayer(layer);
 
+            var parseLayer = new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/2", {
+              mode: ArcGISDynamicMapServiceLayer.MODE_ONDEMAND,
+              outFields: ["*"]
+            });
+            var sfs = new SimpleFillSymbol(
+              "solid",
+              new SimpleLineSymbol("solid", new Color([195, 176, 23]), 2),
+              null
+            );
+            parseLayer.setRenderer(new SimpleRenderer(sfs));
+
+
+            //dojo.keys.copyKey maps to CTRL on windows and Cmd on Mac., but has wrong code for Chrome on Mac
+            var snapManager = map.enableSnapping({
+              snapKey: has("mac") ? keys.META : keys.CTRL
+            });
+            var layerInfos = [{
+              layer: parseLayer
+            }];
+            snapManager.setLayerInfos(layerInfos);
+
+            var measurement = new Measurement({
+              map: map
+            }, dom.byId("measurementDiv"));
+            measurement.startup();
+
             var myWidget = new LayerList({
                map: map,
                showLegend: true,
@@ -159,6 +196,9 @@
             var layers_button = document.getElementById("layers_button");
             var layers_hidden = true;
             dragElement(document.getElementById("my_layers_panel"));
+            var measurement_button = document.getElementById("measurement_button");
+            var measurement_hidden = true;
+            dragElement(document.getElementById("my_measurement_panel"));
 
             function mapReady () {
 
@@ -169,6 +209,8 @@
               fulls.addEventListener("click", openFullscreen);
               layers_button.style.visibility = "visible";
               layers_button.addEventListener("click", openLayers);
+              measurement_button.style.visibility = "visible";
+              measurement_button.addEventListener("click", openMeasurements);
 
               on(search,'select-result', function(e) {
                 console.log ('selected result', e);
@@ -200,15 +242,25 @@
                 layers_hidden=true;
               }
             }
+            function openMeasurements() {
+              if(measurement_hidden){
+                document.getElementById('my_measurement_panel').style.visibility = "visible";
+                measurement_hidden=false;
+              }else{
+                document.getElementById('my_measurement_panel').style.visibility = "hidden";
+                measurement_hidden=true;
+              }
+            }
             function dragElement(elmnt) {
               var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
               if (document.getElementById(elmnt.id + "header")) {
                 /* if present, the header is where you move the DIV from:*/
                 document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-              } else {
-                /* otherwise, move the DIV from anywhere inside the DIV:*/
-                elmnt.onmousedown = dragMouseDown;
               }
+              /*else {
+                // otherwise, move the DIV from anywhere inside the DIV:
+                elmnt.onmousedown = dragMouseDown;
+              }*/
 
               function dragMouseDown(e) {
                 e = e || window.event;
@@ -318,10 +370,10 @@
           <div id="HomeButton"></div>
           <div id="LocateButton"></div>
           <div id="fullscreen_button">
-            <img src="/images/fulls.png" class="my_fulls">
+            <img src="/images/fulls.png">
           </div>
           <div id="layers_button">
-            <img src="/images/layers.png" class="my_fulls">
+            <img src="/images/layers.png">
           </div>
 
           <div id="my_layers_panel" class="card">
@@ -331,6 +383,22 @@
             <div id="my_layers_body" class="card-body">
               <div id="layerList"></div>
             </div>
+            <div id="div_cover"></div>
+          </div>
+
+          <div id="measurement_button">
+            <img src="/images/measure.png">
+          </div>
+
+          <div id="my_measurement_panel" class="card">
+            <div id="my_measurement_panelheader" class="card-header">
+              Измерения
+            </div>
+            <div id="my_measurement_body" class="card-body">
+              <div id="measurementDiv"></div>
+              <span style="font-size:smaller;padding:5px 5px;">Press <b>CTRL</b> to enable snapping.</span>
+            </div>
+            <div id="div_cover"></div>
           </div>
 
       </div>
