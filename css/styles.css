@@ -12,6 +12,7 @@ html, body, #map {
   top: 20px;
   left: 74px;
   z-index: 50;
+  visibility: hidden;
 }
 .attrName{
   color: #888888;
@@ -37,18 +38,21 @@ html, body, #map {
   font-family: Verdana, Arial, sans-serif;
   opacity: 0.6;
   background: #000000;
+  visibility: hidden;
 }
 #HomeButton{
   position: absolute;
   top: 215px;
   left: 20px;
   z-index: 50;
+  visibility: hidden;
 }
 #LocateButton{
   position: absolute;
   top: 255px;
   left: 20px;
   z-index: 50;
+  visibility: hidden;
 }
 #fullscreen_button{
   visibility: hidden;
@@ -192,4 +196,24 @@ html, body, #map {
 }
 .esriToggleButton{
   visibility: inherit!important;
+}
+#loading {
+  position: absolute;
+  background-image: url('/images/loading2.gif');
+  background-repeat: no-repeat;
+  width: 58px;
+  height: 29px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#main_loading{
+  position: absolute;
+  left:0px;
+  top:0px;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #508dca;
 }

@@ -127,8 +127,6 @@
             search.set("sources", sources);
             search.startup();
 
-            map.on("load", mapReady);
-
             var layer;
             layer = new ArcGISDynamicMapServiceLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer");
             map.addLayer(layer);
@@ -185,7 +183,15 @@
             var measurement_hidden = true;
             dragElement(document.getElementById("my_measurement_panel"));
 
-            function mapReady () {
+            layer.on('load', layerReady);
+
+            function layerReady(){
+
+              document.getElementById('main_loading').style.display = 'none';
+              document.getElementById('search').style.visibility = 'visible';
+              document.getElementById('info').style.visibility = 'visible';
+              document.getElementById('HomeButton').style.visibility = 'visible';
+              document.getElementById('LocateButton').style.visibility = 'visible';
 
               map.on("mouse-move", showCoordinates);
               map.on("mouse-drag", showCoordinates);
@@ -386,6 +392,10 @@
               <span style="font-size:smaller;padding:5px 5px;">Press <b>CTRL</b> to enable snapping.</span>
             </div>
             <div id="div_cover"></div>
+          </div>
+
+          <div id="main_loading">
+            <div id="loading"></div>
           </div>
 
       </div>
