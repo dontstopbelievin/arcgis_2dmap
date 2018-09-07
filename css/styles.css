@@ -163,7 +163,6 @@ html, body, #map {
 }
 #my_measurement_body{
   margin-bottom: 15px;
-  cursor: default;
   z-index: 51;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -190,4 +189,7 @@ html, body, #map {
 }
 .dijitDownArrowButton:hover .dijitButtonText, .dijitDownArrowButton:hover .dijitArrowButtonChar{
   background-color: #ededed
+}
+.esriToggleButton{
+  visibility: inherit!important;
 }

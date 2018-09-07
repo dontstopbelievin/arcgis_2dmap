@@ -299,48 +299,50 @@
             }
 
             function executeIdentifyTask (event) {
-              clearTimeout(timer);
-              identifyParams.geometry = event.mapPoint;
-              identifyParams.mapExtent = map.extent;
+              if(!measurement.getTool() && map.getScale()<63000){
+                clearTimeout(timer);
+                identifyParams.geometry = event.mapPoint;
+                identifyParams.mapExtent = map.extent;
 
-              var deferred = identifyTask
-                .execute(identifyParams)
-                .addCallback(function (response) {
-                  // response is an array of identify result objects
-                  // Let's return an array of features.
-                  if(response.length == 0){
-                    timer = setTimeout(function(){map.infoWindow.hide(); }, 1000);
-                  }
-                  return arrayUtils.map(response, function (result) {
-                    //console.log(result.feature);
-                    var feature = result.feature;
-                    var layerName = result.layerName;
-
-                    feature.attributes.layerName = layerName;
-                    if (layerName === 'Здания и сооружения') {
-                      var my_link = "";
-                      if(result.feature.attributes.ссылка != ""){
-                          my_link = "<a target='_blank' href='${ссылка}'>Подробнее</a>";
-                      }
-                      var taxParcelTemplate = new InfoTemplate("${layerName}", `<table>
-                        <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Адрес}"+`</td></tr>
-                        <tr><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${Этажность}"+`</td></tr>
-                        <tr><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${Год постройки}"+`</td></tr>
-                        <tr><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${Функциональное назначение}"+`</td></tr>
-                        <tr><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${Площадь постройки}"+`</td></tr>
-                        <tr><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${Общая площадь}"+`</td></tr>
-                        <tr><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${Материал строения}"+`</td></tr>
-                        <tr><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${Комментарий}"+`</td></tr>
-                        <tr><td class="attrName">Ссылка:</td>  <td class="attrValue">`+my_link+`</td></tr>
-                      </table>`);
-                      feature.setInfoTemplate(taxParcelTemplate);
+                var deferred = identifyTask
+                  .execute(identifyParams)
+                  .addCallback(function (response) {
+                    // response is an array of identify result objects
+                    // Let's return an array of features.
+                    if(response.length == 0){
+                      timer = setTimeout(function(){map.infoWindow.hide(); }, 1000);
                     }
-                    return feature;
-                  });
-                });
+                    return arrayUtils.map(response, function (result) {
+                      //console.log(result.feature);
+                      var feature = result.feature;
+                      var layerName = result.layerName;
 
-              map.infoWindow.setFeatures([deferred]);
-              map.infoWindow.show(event.mapPoint);
+                      feature.attributes.layerName = layerName;
+                      if (layerName === 'Здания и сооружения') {
+                        var my_link = "";
+                        if(result.feature.attributes.ссылка != ""){
+                            my_link = "<a target='_blank' href='${ссылка}'>Подробнее</a>";
+                        }
+                        var taxParcelTemplate = new InfoTemplate("${layerName}", `<table>
+                          <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Адрес}"+`</td></tr>
+                          <tr><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${Этажность}"+`</td></tr>
+                          <tr><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${Год постройки}"+`</td></tr>
+                          <tr><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${Функциональное назначение}"+`</td></tr>
+                          <tr><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${Площадь постройки}"+`</td></tr>
+                          <tr><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${Общая площадь}"+`</td></tr>
+                          <tr><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${Материал строения}"+`</td></tr>
+                          <tr><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${Комментарий}"+`</td></tr>
+                          <tr><td class="attrName">Ссылка:</td>  <td class="attrValue">`+my_link+`</td></tr>
+                        </table>`);
+                        feature.setInfoTemplate(taxParcelTemplate);
+                      }
+                      return feature;
+                    });
+                  });
+
+                map.infoWindow.setFeatures([deferred]);
+                map.infoWindow.show(event.mapPoint);
+              }
             }
 
         });
