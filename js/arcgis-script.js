@@ -1,7 +1,7 @@
 var map;
 var timer;
 /* Get the documentElement (<html>) to display the page in fullscreen */
-var elem = document.documentElement;
+var elem = "";
 require([
     "dojo/dom",
     "dojo/on",
@@ -166,7 +166,7 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
     layer.on('load', layerReady);
 
     function layerReady(){
-
+      elem = document.getElementById("my_map")
       document.getElementById('main_loading').style.display = 'none';
       document.getElementById('search').style.visibility = 'visible';
       document.getElementById('info').style.visibility = 'visible';
