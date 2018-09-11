@@ -65,12 +65,12 @@
             var map = new Map("map",{
               scale: 250000,
               infoWindow: popup,
-              maxScale: 100,
-              minScale: 250000
+              maxScale: 500,
+              minScale: 250000,
+              slider:false
             });
 
             var search = new Search({
-              enableButtonMode: true, //this enables the search widget to display as a single button
               enableLabel: false,
               enableInfoWindow: true,
               showInfoWindowOnSelect: true,
@@ -79,6 +79,28 @@
             }, "search");
 
             var sources = search.get("sources");
+            sources.push({
+              featureLayer: new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/69"),
+              searchFields: ["KAD_N"],
+              displayField: "KAD_N",
+              exactMatch: false,
+              outFields: ["*"],
+              name: "Кадастровый номер",
+              placeholder: "введите кадастровый номер",
+              maxResults: 6,
+              maxSuggestions: 6,
+              infoTemplate: new InfoTemplate("Кадастровый номер", `<table>
+                <tr><td class="attrName">Кадастровый номер:</td>  <td class="attrValue">`+"${KAD_N}"+`</td></tr>
+                <tr><td class="attrName">Код района:</td>  <td class="attrValue">`+"${CodeR}"+`</td></tr>
+                <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Adress}"+`</td></tr>
+                <tr><td class="attrName">Целевое назначение</td>  <td class="attrValue">`+"${Funk}"+`</td></tr>
+                <tr><td class="attrName">Площадь зу:</td>  <td class="attrValue">`+"${S}"+`</td></tr>
+                <tr><td class="attrName">Право:</td>  <td class="attrValue">`+"${right}"+`</td></tr>
+              </table>`),
+              enableSuggestions: true,
+              autoNavigate: false,
+              minCharacters: 0
+            });
             sources.push({
               featureLayer: new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/2"),
               searchFields: ["address"],
@@ -101,27 +123,7 @@
                 <tr><td class="attrName">Ссылка:</td>  <td class="attrValue">`+"<a target='_blank' href='${links}'>Подробнее</a>"+`</td></tr>
               </table>`),
               enableSuggestions: true,
-              minCharacters: 0
-            });
-            sources.push({
-              featureLayer: new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/69"),
-              searchFields: ["KAD_N"],
-              displayField: "KAD_N",
-              exactMatch: false,
-              outFields: ["*"],
-              name: "Кадастровый номер",
-              placeholder: "введите кадастровый номер",
-              maxResults: 6,
-              maxSuggestions: 6,
-              infoTemplate: new InfoTemplate("Кадастровый номер", `<table>
-                <tr><td class="attrName">Кадастровый номер:</td>  <td class="attrValue">`+"${KAD_N}"+`</td></tr>
-                <tr><td class="attrName">Код района:</td>  <td class="attrValue">`+"${CodeR}"+`</td></tr>
-                <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Adress}"+`</td></tr>
-                <tr><td class="attrName">Целевое назначение</td>  <td class="attrValue">`+"${Funk}"+`</td></tr>
-                <tr><td class="attrName">Площадь зу:</td>  <td class="attrValue">`+"${S}"+`</td></tr>
-                <tr><td class="attrName">Право:</td>  <td class="attrValue">`+"${right}"+`</td></tr>
-              </table>`),
-              enableSuggestions: true,
+              autoNavigate: false,
               minCharacters: 0
             });
             search.set("sources", sources);
@@ -159,9 +161,6 @@
 
             var scalebar = new Scalebar({
               map: map,
-              // "dual" displays both miles and kilometers
-              // "english" is the default, which displays miles
-              // use "metric" for kilometers
               scalebarUnit: "metric"
             });
 
@@ -176,6 +175,8 @@
             geoLocate.startup();
 
             var fulls = document.getElementById("fullscreen_button");
+            var zoom_in = document.getElementById("zoom_in");
+            var zoom_out = document.getElementById("zoom_out");
             var layers_button = document.getElementById("layers_button");
             var layers_hidden = true;
             dragElement(document.getElementById("my_layers_panel"));
@@ -198,17 +199,19 @@
 
               fulls.style.visibility = "visible";
               fulls.addEventListener("click", openFullscreen);
+              zoom_in.style.visibility = "visible";
+              zoom_in.addEventListener("click", my_zoom_in);
+              zoom_out.style.visibility = "visible";
+              zoom_out.addEventListener("click", my_zoom_out);
               layers_button.style.visibility = "visible";
               layers_button.addEventListener("click", openLayers);
               measurement_button.style.visibility = "visible";
               measurement_button.addEventListener("click", openMeasurements);
 
               on(search,'select-result', function(e) {
-                console.log ('selected result', e);
-                /*var pt = e.result.feature.geometry.getCentroid();
-                this.map.centerAt(pt);
-                console.log(pt);
-                this.map.setScale(1000);*/
+                //console.log ('selected result', e);
+                this.map.setScale(1000);
+                this.map.centerAt(e.result.feature.geometry.getCentroid());
               });
 
               map.on("click", executeIdentifyTask);
@@ -222,6 +225,14 @@
               identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
               identifyParams.width = map.width;
               identifyParams.height = map.height;
+            }
+
+            function my_zoom_in(){
+              map.setZoom(0);
+            }
+
+            function my_zoom_out(){
+              map.setZoom(1);
             }
 
             function openLayers() {
@@ -359,15 +370,13 @@
     <div data-dojo-type="dijit/layout/BorderContainer" design="headline" gutters="true" style="width: 100%; height: 100%; margin: 0;">
         <div id="map" data-dojo-type="dijit/layout/ContentPane" region="center">
           <div id="search"></div>
+          <div id="zoom_in"></div>
+          <div id="zoom_out"></div>
           <span id="info"></span>
           <div id="HomeButton"></div>
           <div id="LocateButton"></div>
-          <div id="fullscreen_button">
-            <img src="/images/fulls.png">
-          </div>
-          <div id="layers_button">
-            <img src="/images/layers.png">
-          </div>
+          <div id="fullscreen_button"></div>
+          <div id="layers_button"></div>
 
           <div id="my_layers_panel" class="card">
             <div id="my_layers_panelheader" class="card-header">
@@ -378,9 +387,7 @@
             </div>
           </div>
 
-          <div id="measurement_button">
-            <img src="/images/measure.png">
-          </div>
+          <div id="measurement_button"></div>
 
           <div id="my_measurement_panel" class="card">
             <div id="my_measurement_panelheader" class="card-header">
@@ -388,7 +395,7 @@
             </div>
             <div id="my_measurement_body" class="card-body">
               <div id="measurementDiv"></div>
-              <span style="font-size:smaller;padding:5px 5px;">Press <b>CTRL</b> to enable snapping.</span>
+              <span style="font-size:smaller;padding:5px 5px;">Нажмите <b>CTRL</b> чтобы включить привязку.</span>
             </div>
           </div>
 

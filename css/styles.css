@@ -9,8 +9,8 @@ html, body, #map {
 #search {
   display: block;
   position: absolute;
-  top: 20px;
-  left: 74px;
+  top: 15px;
+  left: 20px;
   z-index: 50;
   visibility: hidden;
 }
@@ -43,14 +43,14 @@ html, body, #map {
 #HomeButton{
   position: absolute;
   top: 215px;
-  left: 20px;
+  right: 20px;
   z-index: 50;
   visibility: hidden;
 }
 #LocateButton{
   position: absolute;
   top: 255px;
-  left: 20px;
+  right: 20px;
   z-index: 50;
   visibility: hidden;
 }
@@ -58,37 +58,41 @@ html, body, #map {
   visibility: hidden;
   height: 30px;
   width: 30px;
-  background-color: rgba(102,102,102,0.80);
+  background: url("/images/fulls.png") no-repeat center center;
+  background-color: rgba(255,255,255,0.80);
   text-align: center;
   padding: 2px;
   user-select: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 50%;
   position: absolute;
-  top: 95px;
-  left: 20px;
+  top: 15px;
+  right: 20px;
   z-index: 50;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
 }
 #fullscreen_button:hover{
-  background-color: rgba(102,102,102,0.90);
+  background-color: rgba(245,245,245,0.90);
 }
 #layers_button{
   visibility: hidden;
   height: 30px;
   width: 30px;
-  background-color: rgba(102,102,102,0.80);
+  background: url("/images/layers.png") no-repeat center center;
+  background-color: rgba(255,255,255,0.80);
   text-align: center;
   padding: 2px;
   user-select: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 50%;
   position: absolute;
   top: 135px;
-  left: 20px;
+  right: 20px;
   z-index: 50;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
 }
 #layers_button:hover{
-  background-color: rgba(102,102,102,0.90);
+  background-color: rgba(245,245,245,0.90);
 }
 #layerListPane{
     width:25%;
@@ -109,7 +113,7 @@ html, body, #map {
 #my_layers_panel{
   font-size: 14px!important;
   position:absolute;
-  right:10px;
+  right:60px;
   top:10px;
   z-Index:50;
   width:380px;
@@ -130,28 +134,70 @@ html, body, #map {
   overflow-x: hidden;
   background-color: white;
 }
-#measurement_button{
+#zoom_in{
   visibility: hidden;
   height: 30px;
   width: 30px;
-  background-color: rgba(102,102,102,0.80);
+  background: url("/images/zoom_in.png") no-repeat center center;
+  background-color: rgba(255,255,255,0.80);
   text-align: center;
   padding: 2px;
   user-select: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 50%;
+  position: absolute;
+  top: 55px;
+  right: 20px;
+  z-index: 50;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+}
+#zoom_in:hover{
+  background-color: rgba(245,245,245,0.90);
+}
+#zoom_out{
+  visibility: hidden;
+  height: 30px;
+  width: 30px;
+  background: url("/images/zoom_out.png") no-repeat center center;
+  background-color: rgba(255,255,255,0.80);
+  text-align: center;
+  padding: 2px;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 50%;
+  position: absolute;
+  top: 95px;
+  right: 20px;
+  z-index: 50;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
+}
+#zoom_out:hover{
+  background-color: rgba(245,245,245,0.90);
+}
+#measurement_button{
+  visibility: hidden;
+  height: 30px;
+  width: 30px;
+  background: url("/images/measure.png") no-repeat center center;
+  background-color: rgba(255,255,255,0,8);
+  text-align: center;
+  padding: 2px;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 50%;
   position: absolute;
   top: 175px;
-  left: 20px;
+  right: 20px;
   z-index: 50;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2);
 }
 #measurement_button:hover{
-  background-color: rgba(102,102,102,0.90);
+  background-color: rgba(245,245,245,0.90);
 }
 #my_measurement_panel{
   font-size: 14px!important;
   position:absolute;
-  right:10px;
+  right:60px;
   top:10px;
   z-Index:50;
   width:280px;
@@ -216,4 +262,77 @@ html, body, #map {
   height: 100%;
   width: 100%;
   background-color: #508dca;
+}
+.home{
+  height: 30px!important;
+  width: 30px!important;
+  background: url("/images/home.png") no-repeat center center!important;
+  background-color: rgba(255,255,255,0,8)!important;
+  padding: 2px;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 50%!important;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.3), 0 2px 2px rgba(0,0,0,0.2)!important;
+}
+.home:hover{
+  background-color: rgba(245,245,245,0.90)!important;
+}
+.searchInputGroup{
+  background: #fff;
+  border-radius: 2px;
+  box-sizing: border-box;
+  width: 235px;
+  height: 48px;
+  border-bottom: 1px solid transparent;
+  padding: 12px 12px 11px 12px;
+  transition-property: background,box-shadow;
+  transition-duration: 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+}
+.searchInput{
+  width: 90%!important;
+  border:none!important;
+  height: 24px !important;
+  line-height: 24px;
+  vertical-align: top;
+  font-size: 15px;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.searchClear {
+  padding-top: 7px;
+  height: 24px !important;
+  line-height: 24px;
+  vertical-align: top;
+  margin: 0 !important;
+}
+#search_menu_button{
+  border:none!important;
+  background: #fff;
+  border-radius: 2px;
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  border-bottom: 1px solid transparent;
+  padding: 12px 12px 11px 12px;
+  transition-property: background,box-shadow;
+  transition-duration: 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+}
+.searchBtn {
+  border:none!important;
+  background: #fff;
+  border-radius: 2px;
+  box-sizing: border-box!important;
+  width: 48px!important;
+  height: 48px!important;
+  border-bottom: 1px solid transparent;
+  padding: 12px 12px 11px 12px!important;
+  transition-property: background,box-shadow;
+  transition-duration: 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+}
+*:focus {
+outline: 0;
+outline: none;
 }
