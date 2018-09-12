@@ -24,6 +24,12 @@ html, body, #map {
 .esriPopup{
   z-index: 50;
 }
+.esriPopupWrapper .title {
+    cursor: move;
+}
+.esriPopup .hidden {
+    display: none !important;
+}
 #info{
   height: 17px;
   position:absolute;

@@ -203,6 +203,8 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
       identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
       identifyParams.width = map.width;
       identifyParams.height = map.height;
+
+      dragElement(document.getElementsByClassName("esriPopupWrapper")[0]);
     }
 
     function my_zoom_in(){
@@ -222,6 +224,7 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
         layers_hidden=true;
       }
     }
+
     function openMeasurements() {
       if(measurement_hidden){
         document.getElementById('my_measurement_panel').style.visibility = "visible";
@@ -231,11 +234,14 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
         measurement_hidden=true;
       }
     }
+
     function dragElement(elmnt) {
       var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
       if (document.getElementById(elmnt.id + "header")) {
         /* if present, the header is where you move the DIV from:*/
         document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+      }else if(document.getElementsByClassName("sizer")[0]){
+        document.getElementsByClassName("sizer")[0].onmousedown = dragMouseDown;
       }
       /*else {
         // otherwise, move the DIV from anywhere inside the DIV:
@@ -243,6 +249,17 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
       }*/
 
       function dragMouseDown(e) {
+        document.getElementsByClassName("pointer")[0].style.visibility = "hidden";
+        document.getElementsByClassName("outerPointer")[0].style.visibility = "hidden";
+        //console.log(document.getElementsByClassName("esriPopupWrapper")[0].style.right);
+        if(document.getElementsByClassName("esriPopupWrapper")[0].style.right == '16px'){
+          document.getElementsByClassName("esriPopupWrapper")[0].style.left = '-'+(document.getElementsByClassName("esriPopupWrapper")[0].clientWidth+16)+'px';
+          document.getElementsByClassName("esriPopupWrapper")[0].style.right = "auto";
+        }else if(document.getElementsByClassName("esriPopupWrapper")[0].style.bottom == '17px'){
+          document.getElementsByClassName("esriPopupWrapper")[0].style.top = '-'+(document.getElementsByClassName("esriPopupWrapper")[0].clientHeight+17)+'px';
+          document.getElementsByClassName("esriPopupWrapper")[0].style.bottom = "auto";
+        }
+
         e = e || window.event;
         e.preventDefault();
         // get the mouse cursor position at startup:
@@ -302,6 +319,8 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
         var deferred = identifyTask
           .execute(identifyParams)
           .addCallback(function (response) {
+            document.getElementsByClassName("pointer")[0].style.visibility = "visible";
+            document.getElementsByClassName("outerPointer")[0].style.visibility = "visible";
             // response is an array of identify result objects
             // Let's return an array of features.
             if(response.length == 0){
