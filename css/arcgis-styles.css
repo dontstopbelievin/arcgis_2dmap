@@ -24,6 +24,25 @@
 .esriPopup{
   z-index: 50;
 }
+.esriPopupWrapper .title {
+    cursor: move;
+	font-size:12px!important;
+}
+.titlePane .title{
+	margin-bottom: 0px!important;
+}
+.titlePane .close {
+	opacity: 1!important;
+}
+.esriPopup .hidden {
+    display: none !important;
+}
+.esriPopup .contentPane{
+padding: 0px!important;
+}
+.contentPane table{
+margin: 0px!important;
+}
 #info{
   height: 17px;
   position:absolute;

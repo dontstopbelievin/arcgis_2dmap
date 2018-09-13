@@ -292,14 +292,46 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
 
     /* View in fullscreen */
     function openFullscreen() {
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.mozRequestFullScreen) { /* Firefox */
-        elem.mozRequestFullScreen();
-      } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) { /* IE/Edge */
-        elem.msRequestFullscreen();
+      var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement ||
+        document.webkitFullscreenElement || document.msFullscreenElement;
+      var fulls_event_open = elem.requestFullscreen || elem.mozRequestFullScreen ||
+        elem.webkitRequestFullscreen || elem.msRequestFullscreen;
+      var fulls_event_close = document.exitFullscreen || document.mozCancelFullScreen ||
+        document.webkitExitFullscreen || document.msExitFullscreen;
+      if (fullscreenElement) {
+        switch(fulls_event_close){
+          case document.exitFullscreen:
+            document.exitFullscreen();
+            break;
+          case document.mozCancelFullScreen:
+            document.mozCancelFullScreen();
+            break;
+          case document.webkitExitFullscreen:
+            document.webkitExitFullscreen();
+            break;
+          case document.msExitFullscreen:
+            document.msExitFullscreen();
+            break;
+          default:
+            console.log("error");
+        }
+      } else {
+        switch(fulls_event_open){
+          case elem.requestFullscreen:
+            elem.requestFullscreen();
+            break;
+          case elem.mozRequestFullScreen:
+            elem.mozRequestFullScreen();
+            break;
+          case elem.webkitRequestFullscreen:
+            elem.webkitRequestFullscreen();
+            break;
+          case elem.msRequestFullscreen:
+            elem.msRequestFullscreen();
+            break;
+          default:
+            console.log("error");
+        }
       }
     }
 
