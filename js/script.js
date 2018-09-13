@@ -30,12 +30,13 @@ require([
     "dojo/keys",
     "esri/SnappingManager",
     "esri/dijit/Measurement",
+    "esri/units",
 
     "dijit/form/CheckBox","dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/TitlePane",
     "dojo/domReady!"
 ], function(dom, on, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, has, Map, parser, string,
 SimpleFillSymbol, SimpleLineSymbol, IdentifyTask, IdentifyParameters, Popup, arrayUtils, Color, webMercatorUtils, Scalebar, HomeButton,
-LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
+LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
     parser.parse();
 
     var identifyTask, identifyParams;
@@ -127,7 +128,9 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
     snapManager.setLayerInfos(layerInfos);
 
     var measurement = new Measurement({
-      map: map
+      map: map,
+      defaultAreaUnit: Units.SQUARE_METERS,
+      defaultLengthUnit: Units.METERS
     }, dom.byId("measurementDiv"));
     measurement.startup();
 
@@ -166,6 +169,8 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
     layer.on('load', layerReady);
 
     function layerReady(){
+
+      elem = document.getElementById('testing');
 
       document.getElementById('main_loading').style.display = 'none';
       document.getElementById('search').style.visibility = 'visible';

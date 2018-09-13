@@ -127,7 +127,9 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement) {
     snapManager.setLayerInfos(layerInfos);
 
     var measurement = new Measurement({
-      map: map
+      map: map,
+      defaultAreaUnit: Units.SQUARE_METERS,
+      defaultLengthUnit: Units.METERS
     }, dom.byId("measurementDiv"));
     measurement.startup();
 
