@@ -170,7 +170,7 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
 
     function layerReady(){
 
-      elem = document.getElementById('testing');
+      //elem = document.getElementById('testing');
 
       document.getElementById('main_loading').style.display = 'none';
       document.getElementById('search').style.visibility = 'visible';
