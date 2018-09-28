@@ -6,12 +6,62 @@ html, body, #map {
   height: 100%!important;
   width: 100%!important;
 }
+.esriPopup{
+  left: 20px!important;
+  top: 75px!important;
+  max-height: 500px!important;
+}
+.esriPopupWrapper{
+  position: relative!important;
+  left: 0px!important;
+  top: 0px!important;
+  width: 331px;
+  max-height: 100%!important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02)!important;
+}
+.esriPopupWrapper .content{
+  max-height: 90%!important;
+}
+.esriPopup .contentPane{
+  max-height: 100%!important;
+}
+.esriPopup .titleButton{
+  background: url(../images/close_icon.png) no-repeat;
+}
+.esriPopup .titleButton.close{
+  width: 15px;
+  height: 15px;
+  margin: 5px 5px 0px 0px;
+}
+.titlePane .title{
+  font-weight: bold;
+  padding: 5px 0px 0px 5px;
+  color: black!important;
+}
+.esriPopup .titlePane {
+  background-color: #fff;
+}
+.maximize{
+  display: none!important;
+}
+.contentPane{
+  background-color: #fff!important;
+}
+.contentPane, .sizer, .titlePane{
+  width: 100%!important;
+}
+.pointer{
+  display: none!important;
+}
+.outerPointer{
+  display: none!important;
+}
 #search {
   display: block;
   position: absolute;
   top: 15px;
   left: 20px;
-  z-index: 50;
+  z-index: 51;
   visibility: hidden;
 }
 .attrName{
@@ -23,9 +73,6 @@ html, body, #map {
 }
 .esriPopup{
   z-index: 50;
-}
-.esriPopupWrapper .title {
-    cursor: move;
 }
 .esriPopup .hidden {
     display: none !important;

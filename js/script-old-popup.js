@@ -75,12 +75,12 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
       maxResults: 6,
       maxSuggestions: 6,
       infoTemplate: new InfoTemplate("Кадастровый номер", `<table>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Кадастровый номер:</td>  <td class="attrValue">`+"${KAD_N}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Код района:</td>  <td class="attrValue">`+"${CodeR}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Adress}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Целевое назначение</td>  <td class="attrValue">`+"${Funk}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Площадь зу:</td>  <td class="attrValue">`+"${S}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Право:</td>  <td class="attrValue">`+"${right}"+`</td></tr>
+        <tr><td class="attrName">Кадастровый номер:</td>  <td class="attrValue">`+"${KAD_N}"+`</td></tr>
+        <tr><td class="attrName">Код района:</td>  <td class="attrValue">`+"${CodeR}"+`</td></tr>
+        <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Adress}"+`</td></tr>
+        <tr><td class="attrName">Целевое назначение</td>  <td class="attrValue">`+"${Funk}"+`</td></tr>
+        <tr><td class="attrName">Площадь зу:</td>  <td class="attrValue">`+"${S}"+`</td></tr>
+        <tr><td class="attrName">Право:</td>  <td class="attrValue">`+"${right}"+`</td></tr>
       </table>`),
       enableSuggestions: true,
       autoNavigate: false,
@@ -97,15 +97,15 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
       maxResults: 6,
       maxSuggestions: 6,
       infoTemplate: new InfoTemplate("Здания и сооружения", `<table>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${address}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${FLOOR}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${YEAR_OF_FO}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${NAME}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${ZASTR_AREA}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${OBSCH_AREA}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${MATERIAL}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${NOTE}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Ссылка:</td>  <td class="attrValue">`+"<a target='_blank' href='${links}'>Подробнее</a>"+`</td></tr>
+        <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${address}"+`</td></tr>
+        <tr><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${FLOOR}"+`</td></tr>
+        <tr><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${YEAR_OF_FO}"+`</td></tr>
+        <tr><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${NAME}"+`</td></tr>
+        <tr><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${ZASTR_AREA}"+`</td></tr>
+        <tr><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${OBSCH_AREA}"+`</td></tr>
+        <tr><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${MATERIAL}"+`</td></tr>
+        <tr><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${NOTE}"+`</td></tr>
+        <tr><td class="attrName">Ссылка:</td>  <td class="attrValue">`+"<a target='_blank' href='${links}'>Подробнее</a>"+`</td></tr>
       </table>`),
       enableSuggestions: true,
       autoNavigate: false,
@@ -208,6 +208,8 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
       identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
       identifyParams.width = map.width;
       identifyParams.height = map.height;
+
+      dragElement(document.getElementsByClassName("esriPopupWrapper")[0]);
     }
 
     function my_zoom_in(){
@@ -252,6 +254,17 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
       }*/
 
       function dragMouseDown(e) {
+        document.getElementsByClassName("pointer")[0].style.visibility = "hidden";
+        document.getElementsByClassName("outerPointer")[0].style.visibility = "hidden";
+        //console.log(document.getElementsByClassName("esriPopupWrapper")[0].style.right);
+        if(document.getElementsByClassName("esriPopupWrapper")[0].style.right == '16px'){
+          document.getElementsByClassName("esriPopupWrapper")[0].style.left = '-'+(document.getElementsByClassName("esriPopupWrapper")[0].clientWidth+16)+'px';
+          document.getElementsByClassName("esriPopupWrapper")[0].style.right = "auto";
+        }else if(document.getElementsByClassName("esriPopupWrapper")[0].style.bottom == '17px'){
+          document.getElementsByClassName("esriPopupWrapper")[0].style.top = '-'+(document.getElementsByClassName("esriPopupWrapper")[0].clientHeight+17)+'px';
+          document.getElementsByClassName("esriPopupWrapper")[0].style.bottom = "auto";
+        }
+
         e = e || window.event;
         e.preventDefault();
         // get the mouse cursor position at startup:
@@ -362,15 +375,15 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
                     my_link = "<a target='_blank' href='${ссылка}'>Подробнее</a>";
                 }
                 var taxParcelTemplate = new InfoTemplate("${layerName}", `<table>
-                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Адрес}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${Этажность}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${Год постройки}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${Функциональное назначение}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${Площадь постройки}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${Общая площадь}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${Материал строения}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${Комментарий}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Ссылка:</td>  <td class="attrValue">`+my_link+`</td></tr>
+                  <tr><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Адрес}"+`</td></tr>
+                  <tr><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${Этажность}"+`</td></tr>
+                  <tr><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${Год постройки}"+`</td></tr>
+                  <tr><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${Функциональное назначение}"+`</td></tr>
+                  <tr><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${Площадь постройки}"+`</td></tr>
+                  <tr><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${Общая площадь}"+`</td></tr>
+                  <tr><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${Материал строения}"+`</td></tr>
+                  <tr><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${Комментарий}"+`</td></tr>
+                  <tr><td class="attrName">Ссылка:</td>  <td class="attrValue">`+my_link+`</td></tr>
                 </table>`);
                 feature.setInfoTemplate(taxParcelTemplate);
               }
