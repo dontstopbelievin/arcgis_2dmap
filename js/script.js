@@ -165,6 +165,7 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
     var measurement_button = document.getElementById("measurement_button");
     var measurement_hidden = true;
     dragElement(document.getElementById("my_measurement_panel"));
+    var popup_minimized = false;
 
     layer.on('load', layerReady);
 
@@ -190,6 +191,7 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
       layers_button.addEventListener("click", openLayers);
       measurement_button.style.visibility = "visible";
       measurement_button.addEventListener("click", openMeasurements);
+      document.getElementsByClassName("titleButton maximize")[0].addEventListener("click", minimize_popup);
 
       on(search,'select-result', function(e) {
         //console.log ('selected result', e);
@@ -208,6 +210,20 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
       identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
       identifyParams.width = map.width;
       identifyParams.height = map.height;
+    }
+
+    function minimize_popup(event){
+      event.preventDefault();
+      if(popup_minimized){
+        document.getElementsByClassName('contentPane')[0].style.display = 'block';
+        document.getElementsByClassName('actionsPane')[0].style.display = 'block';
+        popup_minimized = false;
+      }else{
+        document.getElementsByClassName('contentPane')[0].style.display = 'none';
+        document.getElementsByClassName('actionsPane')[0].style.display = 'none';
+        popup_minimized = true;
+      }
+
     }
 
     function my_zoom_in(){
@@ -343,8 +359,9 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
         var deferred = identifyTask
           .execute(identifyParams)
           .addCallback(function (response) {
-            document.getElementsByClassName("pointer")[0].style.visibility = "visible";
-            document.getElementsByClassName("outerPointer")[0].style.visibility = "visible";
+            document.getElementsByClassName('contentPane')[0].style.display = 'block';
+            document.getElementsByClassName('actionsPane')[0].style.display = 'block';
+            popup_minimized = false;
             // response is an array of identify result objects
             // Let's return an array of features.
             if(response.length == 0){

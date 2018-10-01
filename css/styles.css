@@ -25,10 +25,32 @@ html, body, #map {
 .esriPopup .contentPane{
   max-height: 100%!important;
 }
-.esriPopup .titleButton{
-  background: url(../images/close_icon.png) no-repeat;
-}
 .esriPopup .titleButton.close{
+  background: url(../images/close_icon.png) no-repeat;
+  width: 15px;
+  height: 15px;
+  margin: 5px 5px 0px 0px;
+}
+.esriPopup .titleButton.maximize{
+  background: url(../images/minimize.png) no-repeat;
+  width: 15px;
+  height: 15px;
+  margin: 2px 5px 0px 0px;
+}
+.esriPopup .titleButton.restore{
+  background: url(../images/maximize.png) no-repeat;
+  width: 15px;
+  height: 15px;
+  margin: 2px 5px 0px 0px;
+}
+.esriPopup .titleButton.next{
+  background: url(../images/right_arrow.png) no-repeat;
+  width: 15px;
+  height: 15px;
+  margin: 5px 5px 0px 0px;
+}
+.esriPopup .titleButton.prev{
+  background: url(../images/left_arrow.png) no-repeat;
   width: 15px;
   height: 15px;
   margin: 5px 5px 0px 0px;
@@ -41,9 +63,7 @@ html, body, #map {
 .esriPopup .titlePane {
   background-color: #fff;
 }
-.maximize{
-  display: none!important;
-}
+
 .contentPane{
   background-color: #fff!important;
 }
@@ -63,6 +83,13 @@ html, body, #map {
   left: 20px;
   z-index: 51;
   visibility: hidden;
+}
+.arcgisSearch .searchMenu {
+  border: none!important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02)!important;
+}
+.searchMenu.sourcesMenu{
+  width: 283px!important;
 }
 .attrName{
   color: #888888;
