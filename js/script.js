@@ -65,9 +65,9 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
 
     var sources = search.get("sources");
     sources.push({
-      featureLayer: new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/69"),
-      searchFields: ["KAD_N"],
-      displayField: "KAD_N",
+      featureLayer: new FeatureLayer("https://gis.uaig.kz/server/rest/services/Map2d/объекты_города/MapServer/20"),
+      searchFields: ["kad_n"],
+      displayField: "kad_n",
       exactMatch: false,
       outFields: ["*"],
       name: "Кадастровый номер",
@@ -75,21 +75,21 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
       maxResults: 6,
       maxSuggestions: 6,
       infoTemplate: new InfoTemplate("Кадастровый номер", `<table>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Кадастровый номер:</td>  <td class="attrValue">`+"${KAD_N}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Код района:</td>  <td class="attrValue">`+"${CodeR}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Adress}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Целевое назначение</td>  <td class="attrValue">`+"${Funk}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Площадь зу:</td>  <td class="attrValue">`+"${S}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Право:</td>  <td class="attrValue">`+"${right}"+`</td></tr>
+        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Кадастровый номер:</td>  <td class="attrValue">`+"${kad_n}"+`</td></tr>
+        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Код района:</td>  <td class="attrValue">`+"${coder}"+`</td></tr>
+        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${adress}"+`</td></tr>
+        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Целевое назначение</td>  <td class="attrValue">`+"${funk}"+`</td></tr>
+        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Площадь зу:</td>  <td class="attrValue">`+"${s}"+`</td></tr>
+        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Право:</td>  <td class="attrValue">`+"${right_}"+`</td></tr>
       </table>`),
       enableSuggestions: true,
       autoNavigate: false,
       minCharacters: 0
     });
     sources.push({
-      featureLayer: new FeatureLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer/2"),
-      searchFields: ["address"],
-      displayField: "address",
+      featureLayer: new FeatureLayer("https://gis.uaig.kz/server/rest/services/Map2d/Базовая_карта_MIL1/MapServer/16"),
+      searchFields: ["street_name_1"],
+      displayField: "street_name_1",
       exactMatch: false,
       outFields: ["*"],
       name: "Здания и сооружения",
@@ -97,15 +97,15 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
       maxResults: 6,
       maxSuggestions: 6,
       infoTemplate: new InfoTemplate("Здания и сооружения", `<table>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${address}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${FLOOR}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${YEAR_OF_FO}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${NAME}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${ZASTR_AREA}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${OBSCH_AREA}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${MATERIAL}"+`</td></tr>
-        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${NOTE}"+`</td></tr>
-        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Ссылка:</td>  <td class="attrValue">`+"<a target='_blank' href='${links}'>Подробнее</a>"+`</td></tr>
+        <tr style="background-color: rgba(0, 0, 255, 0.05);width:100%"><td class="attrName">Адресный массив:</td>  <td class="attrValue">`+"${id_adr_massive}"+`</td></tr>
+        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Количество этажей:</td>  <td class="attrValue">`+"${floor}"+`</td></tr>
+        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${year_of_foundation}"+`</td></tr>
+        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${obsch_area}"+`</td></tr>
+        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Объем здания, м3:</td>  <td class="attrValue">`+"${volume_build}"+`</td></tr>
+        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Площадь жил. помещения:</td>  <td class="attrValue">`+"${zhil_area}"+`</td></tr>
+        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Площадь застройки, м2:</td>  <td class="attrValue">`+"${zastr_area}"+`</td></tr>
+        <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Наименование первичной улицы:</td>  <td class="attrValue">`+"${street_name_1}"+`</td></tr>
+        <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Основной номер дома:</td>  <td class="attrValue">`+"${number_1}"+`</td></tr>
       </table>`),
       enableSuggestions: true,
       autoNavigate: false,
@@ -114,9 +114,11 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
     search.set("sources", sources);
     search.startup();
 
-    var layer;
-    layer = new ArcGISDynamicMapServiceLayer("https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer");
+    var layer, layer2;
+    layer = new ArcGISDynamicMapServiceLayer("http://gis.uaig.kz/server/rest/services/Map2d/Базовая_карта_MIL1/MapServer");
+    layer2 = new ArcGISDynamicMapServiceLayer("http://gis.uaig.kz/server/rest/services/Map2d/объекты_города/MapServer");
     map.addLayer(layer);
+    map.addLayer(layer2);
 
     //dojo.keys.copyKey maps to CTRL on windows and Cmd on Mac., but has wrong code for Chrome on Mac
     var snapManager = map.enableSnapping({
@@ -141,7 +143,10 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
        showSubLayers: true,
        layers: [{
           layer: layer,
-          id: "Все слои"
+          id: "Базовая_карта_MIL1"
+       },{
+          layer: layer2,
+          id: "Объекты города"
        }]
     },"layerList");
     layers_widget.startup();
@@ -169,7 +174,7 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
 
     layer.on('load', layerReady);
 
-    function layerReady(){
+    function layerReady(){console.log(layer);
 
       //elem = document.getElementById('testing');
 
@@ -201,12 +206,12 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
 
       map.on("click", executeIdentifyTask);
       //create identify tasks and setup parameters
-      identifyTask = new IdentifyTask('https://gis.uaig.kz:6443/arcgis/rest/services/Map/MapAlm/MapServer');
+      identifyTask = new IdentifyTask('https://gis.uaig.kz/server/rest/services/Map2d/Базовая_карта_MIL1/MapServer');
 
       identifyParams = new IdentifyParameters();
       identifyParams.tolerance = 3;
       identifyParams.returnGeometry = true;
-      identifyParams.layerIds = [2];
+      identifyParams.layerIds = [16];
       identifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
       identifyParams.width = map.width;
       identifyParams.height = map.height;
@@ -374,20 +379,16 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
 
               feature.attributes.layerName = layerName;
               if (layerName === 'Здания и сооружения') {
-                var my_link = "";
-                if(result.feature.attributes.ссылка != ""){
-                    my_link = "<a target='_blank' href='${ссылка}'>Подробнее</a>";
-                }
                 var taxParcelTemplate = new InfoTemplate("${layerName}", `<table>
-                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Адрес:</td>  <td class="attrValue">`+"${Адрес}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Этажность:</td>  <td class="attrValue">`+"${Этажность}"+`</td></tr>
+                  <tr style="background-color: rgba(0, 0, 255, 0.05);width:100%"><td class="attrName">Адресный массив:</td>  <td class="attrValue">`+"${Адресный массив}"+`</td></tr>
+                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Количество этажей:</td>  <td class="attrValue">`+"${Количество этажей}"+`</td></tr>
                   <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Год постройки:</td>  <td class="attrValue">`+"${Год постройки}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Функциональное назначение:</td>  <td class="attrValue">`+"${Функциональное назначение}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Площадь постройки:</td>  <td class="attrValue">`+"${Площадь постройки}"+`</td></tr>
                   <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Общая площадь:</td>  <td class="attrValue">`+"${Общая площадь}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Материал строения:</td>  <td class="attrValue">`+"${Материал строения}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Комментарий:</td>  <td class="attrValue">`+"${Комментарий}"+`</td></tr>
-                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Ссылка:</td>  <td class="attrValue">`+my_link+`</td></tr>
+                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Объем здания, м3:</td>  <td class="attrValue">`+"${Объем здания, м3}"+`</td></tr>
+                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Площадь жил. помещения:</td>  <td class="attrValue">`+"${Площадь жил. помещения}"+`</td></tr>
+                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Площадь застройки, м2:</td>  <td class="attrValue">`+"${Площадь застройки, м2}"+`</td></tr>
+                  <tr style="background-color: rgba(0, 255, 0, 0.05);"><td class="attrName">Наименование первичной улицы:</td>  <td class="attrValue">`+"${Наименование первичной улицы}"+`</td></tr>
+                  <tr style="background-color: rgba(0, 0, 255, 0.05);"><td class="attrName">Основной номер дома:</td>  <td class="attrValue">`+"${Основной номер дома}"+`</td></tr>
                 </table>`);
                 feature.setInfoTemplate(taxParcelTemplate);
               }
