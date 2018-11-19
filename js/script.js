@@ -31,12 +31,13 @@ require([
     "esri/SnappingManager",
     "esri/dijit/Measurement",
     "esri/units",
+    "esri/dijit/BasemapGallery",
 
     "dijit/form/CheckBox","dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/TitlePane",
     "dojo/domReady!"
 ], function(dom, on, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, has, Map, parser, string,
 SimpleFillSymbol, SimpleLineSymbol, IdentifyTask, IdentifyParameters, Popup, arrayUtils, Color, webMercatorUtils, Scalebar, HomeButton,
-LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
+LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units, BasemapGallery) {
     parser.parse();
 
     var identifyTask, identifyParams;
@@ -54,6 +55,11 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
       minScale: 250000,
       slider:false
     });
+    var basemapGallery = new BasemapGallery({
+        showArcGISBasemaps: true,
+        map: map
+      }, "my_basemap_content");
+    basemapGallery.startup();
 
     var search = new Search({
       enableLabel: false,
@@ -142,9 +148,6 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
        showOpacitySlider: true,
        showSubLayers: true,
        layers: [{
-          layer: layer,
-          id: "Базовая_карта_MIL1"
-       },{
           layer: layer2,
           id: "Объекты города"
        }]
@@ -162,6 +165,9 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
     home.startup();
 
     var fulls = document.getElementById("fullscreen_button");
+    var my_basemap = document.getElementById("basemap");
+    var basemap_hidden = true;
+    dragElement(document.getElementById("my_basemap_panel"));
     var zoom_in = document.getElementById("zoom_in");
     var zoom_out = document.getElementById("zoom_out");
     var layers_button = document.getElementById("layers_button");
@@ -188,6 +194,8 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
 
       fulls.style.visibility = "visible";
       fulls.addEventListener("click", openFullscreen);
+      my_basemap.style.visibility = "visible";
+      my_basemap.addEventListener("click", openBasemaps);
       zoom_in.style.visibility = "visible";
       zoom_in.addEventListener("click", my_zoom_in);
       zoom_out.style.visibility = "visible";
@@ -237,6 +245,16 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units) {
 
     function my_zoom_out(){
       map.setZoom(1);
+    }
+
+    function openBasemaps(){
+      if(basemap_hidden){
+        document.getElementById('my_basemap_panel').style.visibility = "visible";
+        basemap_hidden=false;
+      }else{
+        document.getElementById('my_basemap_panel').style.visibility = "hidden";
+        basemap_hidden=true;
+      }
     }
 
     function openLayers() {
