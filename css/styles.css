@@ -70,6 +70,9 @@ html, body, #map {
 .contentPane, .sizer, .titlePane{
   width: 100%!important;
 }
+.contentPane table{
+  width: 100%;
+}
 .pointer{
   display: none!important;
 }

@@ -32,12 +32,14 @@ require([
     "esri/dijit/Measurement",
     "esri/units",
     "esri/dijit/BasemapGallery",
+    "esri/arcgis/utils",
 
     "dijit/form/CheckBox","dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/TitlePane",
     "dojo/domReady!"
 ], function(dom, on, domConstruct, Search, ArcGISDynamicMapServiceLayer, ArcGISTiledMapServiceLayer, FeatureLayer, InfoTemplate, has, Map, parser, string,
 SimpleFillSymbol, SimpleLineSymbol, IdentifyTask, IdentifyParameters, Popup, arrayUtils, Color, webMercatorUtils, Scalebar, HomeButton,
-LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units, BasemapGallery) {
+LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units, BasemapGallery, arcgisUtils) {
+    arcgisUtils.arcgisUrl = "https://gis.uaig.kz/arcgis/sharing/rest/content/items";
     parser.parse();
 
     var identifyTask, identifyParams;
@@ -48,20 +50,28 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units, Ba
           new Color([255, 0, 0]), 2), new Color([255, 255, 0, 0.25]))
     }, domConstruct.create("div"));
 
-    var map = new Map("map",{
-      scale: 250000,
-      infoWindow: popup,
-      maxScale: 500,
-      minScale: 250000,
-      slider:false
+    var map, measurement, search, basemapGallery, sources, scalebar, home;
+    var mapid="b5a3c97bd18442c1949ba5aefc4c1835";
+    var mapDeferred = esri.arcgis.utils.createMap(mapid, "map", {
+      mapOptions: {
+        scale: 500000,
+        infoWindow: popup,
+        maxScale: 500,
+        minScale: 500000,
+        slider:false
+      }
     });
-    var basemapGallery = new BasemapGallery({
+
+  mapDeferred.then(function(response) {
+    map = response.map;
+
+    basemapGallery = new BasemapGallery({
         showArcGISBasemaps: true,
         map: map
       }, "my_basemap_content");
     basemapGallery.startup();
 
-    var search = new Search({
+    search = new Search({
       enableLabel: false,
       enableInfoWindow: true,
       showInfoWindowOnSelect: true,
@@ -69,7 +79,7 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units, Ba
       sources: []
     }, "search");
 
-    var sources = search.get("sources");
+    sources = search.get("sources");
     sources.push({
       featureLayer: new FeatureLayer("https://gis.uaig.kz/server/rest/services/Map2d/объекты_города/MapServer/20"),
       searchFields: ["kad_n"],
@@ -120,22 +130,16 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units, Ba
     search.set("sources", sources);
     search.startup();
 
-    var layer, layer2;
-    layer = new ArcGISDynamicMapServiceLayer("http://gis.uaig.kz/server/rest/services/Map2d/Базовая_карта_MIL1/MapServer");
-    layer2 = new ArcGISDynamicMapServiceLayer("http://gis.uaig.kz/server/rest/services/Map2d/объекты_города/MapServer");
-    map.addLayer(layer);
-    map.addLayer(layer2);
-
     //dojo.keys.copyKey maps to CTRL on windows and Cmd on Mac., but has wrong code for Chrome on Mac
     var snapManager = map.enableSnapping({
       snapKey: has("mac") ? keys.META : keys.CTRL
     });
     var layerInfos = [{
-      layer: layer
+      layer: arcgisUtils.getLayerList(response)
     }];
     snapManager.setLayerInfos(layerInfos);
 
-    var measurement = new Measurement({
+    measurement = new Measurement({
       map: map,
       defaultAreaUnit: Units.SQUARE_METERS,
       defaultLengthUnit: Units.METERS
@@ -147,22 +151,26 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units, Ba
        showLegend: true,
        showOpacitySlider: true,
        showSubLayers: true,
-       layers: [{
-          layer: layer2,
-          id: "Объекты города"
-       }]
+       layers: arcgisUtils.getLayerList(response)
     },"layerList");
     layers_widget.startup();
 
-    var scalebar = new Scalebar({
+    scalebar = new Scalebar({
       map: map,
       scalebarUnit: "metric"
     });
 
-    var home = new HomeButton({
+    home = new HomeButton({
       map: map
     }, "HomeButton");
     home.startup();
+    //layer.on('load', layerReady);
+    if (map.loaded) {
+      layerReady();
+    } else {
+      dojo.connect(map, "onLoad", layerReady);
+    }
+  });
 
     var fulls = document.getElementById("fullscreen_button");
     var my_basemap = document.getElementById("basemap");
@@ -178,9 +186,7 @@ LayerList, Dialog, DialogUnderlay, keys, SnappingManager, Measurement, Units, Ba
     dragElement(document.getElementById("my_measurement_panel"));
     var popup_minimized = false;
 
-    layer.on('load', layerReady);
-
-    function layerReady(){console.log(layer);
+    function layerReady(){//console.log(layer);
 
       //elem = document.getElementById('testing');
 
